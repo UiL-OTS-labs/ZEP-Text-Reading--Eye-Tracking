@@ -1,0 +1,39 @@
+/******************************************************************************\
+FILE:           shuffle.zm
+AUTHOR:         Theo Veenker <theo.veenker@beexy.nl>
+ADAPTED BY:     -
+
+DESCRIPTION:
+
+Item table shuffling functions.
+
+
+HISTORY:
+2012-08-23 TV   Created.
+
+\******************************************************************************/
+
+
+// Shuffles test_items table (no restrictions on item order).
+int shuffle_test_items()
+{
+    test_items.shuffle(0, -1);
+
+    return OK;
+}
+
+
+// Prints test_items table contents in terminal window.
+void dump_test_items()
+{
+    int nitems = test_items.size;
+    int n;
+    while (n < nitems)
+    {
+        println(string(n) + "\t" +
+            string(test_items[n].type) + "\t" +
+            string(test_items[n].id) + "\t" +
+            substring(test_items[n].text, 0, 20));
+        n++;
+    }
+}

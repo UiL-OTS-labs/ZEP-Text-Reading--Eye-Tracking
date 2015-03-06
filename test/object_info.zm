@@ -1,0 +1,69 @@
+/******************************************************************************\
+FILE:           object_info.zm
+AUTHOR:         Theo Veenker <theo.veenker@beexy.nl>
+ADAPTED BY:     -
+
+DESCRIPTION:
+
+Defines the format of the object information output table.
+
+
+HISTORY:
+2013-01-10 TV   Created.
+
+\******************************************************************************/
+
+
+// Output table record for object information.
+record ObjectInfo
+{
+    string      id;                     // item id
+//    ItemType    type;                 // item type (condition)
+    string      completetype;           // item type (condition), prefixed "Q"
+                                        //   if stimulus was a question
+    int         nlines;                 // number of lines
+    int         linenum;                // line number
+    int         objnumintext;           // word number in text
+    int         nwordsinline;           // number of words in line      
+    int         objnuminline;           // object number within line
+    int         x;                      // object x (lower-left corner)
+    int         y;                      // object y (lower-left corner)
+    int         width;                  // object width
+    int         height;                 // object height
+    int         linelength;             // line length (excludes leading 
+                                        //   and/or trailing spaces)
+    int         wordlength;             // word length (excludes leading 
+                                        //   and/or trailing spaces)
+    string      text;                   // object text (excludes any leading 
+                                        //   and/or trailing spaces) 
+}
+
+
+// Object information output table.
+ObjectInfo[..] object_info;
+
+
+//------------------------------------------------------------------------------
+
+
+// Appends one row of data to object information output table.
+void object_info_append(ObjectInfo data)
+{
+    object_info.size = object_info.size + 1;
+    object_info[object_info.size-1] = data;
+}
+
+
+// Writes object information output table contents to CSV file and clears 
+// the table.
+void object_info_save()
+{
+    if (!generate_object_info) return;
+
+    string dir = data_dir() + script_name() + "/obt/";
+
+    // Save table to CSV file (create if non-existent).
+    object_info.save(dir + "objects.csv", 
+        "Object Information");
+    object_info.size = 0;
+}

@@ -1,0 +1,115 @@
+/******************************************************************************\
+FILE:           stimuli.zm
+AUTHOR:         Theo Veenker <theo.veenker@beexy.nl>
+ADAPTED BY:     -
+
+DESCRIPTION:
+
+Defines the formats of item table(s) and provides the actual content of
+the item table(s) i.e. stimulus information.
+
+
+HISTORY:
+2012-08-23 TV   Created.
+
+\******************************************************************************/
+
+
+// Symbolic definition of item type.
+enum ItemType
+{
+    PRAC,                     // practice trial
+    FILL,                     // filler
+    CNDA,                     // condition 1
+    CNDB,                     // condition 2
+}
+
+
+// Item table record.
+record TestItem
+{
+//    int         id;             // item id
+    string      id;             // item id
+    ItemType    type;           // item type (condition)
+
+    string      text;           // stimulus text
+    bool        driftchk;       // if set, perform drift check
+    bool        receye;         // if set, record eye movements
+
+    string      qtext;          // true/false statement about stimulus [opt]
+    bool        qdriftchk;      // if set, perform drift check (for question)
+    bool        qreceye;        // if set, record eye movements (for question)
+    bool        qanswer;        // whether statement is correct
+}
+
+
+// Practice item table.
+//   index: item number
+TestItem[..] prac_items =
+{
+    {
+        "001", PRAC, 
+
+        "In het tuincentrum konden Martine en Marije genoeg van hun gading\n"
+        "vinden. Martine zocht een zes appelbomen van een ziektebestendig\n"
+        "ras uit, en Marije twaalf bessenstruiken. Gelukkig was het prima\n"
+        "weer om hun nieuwe aanwinsten meteen te planten.",
+        true, false, 
+
+        "",
+        false, false, false
+    },
+
+    {
+        "002", PRAC, 
+
+        "Godelieve en Vincent waren net verhuisd en waren aan het klussen op\n"
+        "zolder. Godelieve zaagde een boekenplank van MDF, terwijl Vincent\n"
+        "de kozijnen verfde. Na een dag hard werken gingen ze tevreden slapen\n"
+        "in hun nieuwe huis.",
+        true, false, 
+
+        "Godelieve verfde de kozijnen.",
+        false, false, true
+    },
+};
+
+
+// Test item table.
+//   index: item number
+TestItem[..] test_items;
+
+
+// Loads item table(s) from CSV file(s) in the stimuli folder.
+int load_stimuli()
+{
+    // Uncomment relevant parts below to load stimuli from CSV file.
+
+    int err;
+
+//    // Load data into prac_items table.
+//    err = prac_items.load(stimuli_dir() + "prac_items.csv", 
+//        true,           // if true, file contains a header row
+//        1);             // number of lines to skip before header and data
+//    if (err) return err;
+
+
+    // Load data into test_items table.
+    err = test_items.load(stimuli_dir() + "test_items.csv", 
+        true,           // if true, file contains a header row
+        1);             // number of lines to skip before header and data
+    if (err) return err;
+
+    return OK;
+}
+
+
+// Saves item table(s) as CSV file(s) in the script folder.
+void save_stimuli()
+{
+    prac_items.save(script_dir() + "prac_items.csv", 
+        "Practice items");
+
+    test_items.save(script_dir() + "test_items.csv", 
+        "Test items");
+}
