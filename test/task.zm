@@ -1,7 +1,7 @@
 /******************************************************************************\
 FILE:           task.zm
 AUTHOR:         Theo Veenker <theo.veenker@beexy.nl>
-ADAPTED BY:     -
+ADAPTED BY:     Maarten Duijndam <M.J.A.Duijndam@uu.nl>
 
 DESCRIPTION:
 
@@ -36,6 +36,7 @@ Global structure of this experiment phase:
 
 HISTORY:
 2012-08-23 TV   Created.
+2015-11-19 MD   Adapted to make it easy to include smi_eyetracker.
 
 \******************************************************************************/
 

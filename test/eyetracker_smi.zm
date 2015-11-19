@@ -1,15 +1,15 @@
 /******************************************************************************\
-FILE:           eyetracker_eyelink.zm
+FILE:           eyetracker_smi.zm
 AUTHOR:         Theo Veenker <theo.veenker@beexy.nl>
-ADAPTED BY:     -
+ADAPTED BY:     Maarten Duijndam <m.j.a.duijndam@uu.nl>
 
 DESCRIPTION:
 
-Provides an interface to the EyeLink eye-tracker.
-
+Provides an interface to the smi eye-tracker.
 
 HISTORY:
 2012-09-21 TV   Created.
+2015-11-19 MD   Adapted to needs of an smi eye_tracker.
 
 \******************************************************************************/
 
@@ -37,7 +37,7 @@ SmiEyeTracker eyetracker
         // The following attributes define appearance of calibration targets.
 
 //        wakeup_target_duration          = 1000ms;
-        focus_target_duration           = 254ms;
+        focus_target_duration           = 250ms;
 
 //        default_target_line_color       = color:black;
 //        default_target_color            = color:red;
@@ -77,8 +77,8 @@ SmiEyeTracker eyetracker
         //   SYSTEM: eye-tracker defined format (preferred)
         //   ZEP:    zep defined format
         //   BOTH:   both eye-tracker and zep defined format
-        //data_file_format                = EYE_FILE_FORMAT_ZEP;
-        data_file_format                = EYE_FILE_FORMAT_EYELINK_ASC;
+        data_file_format                = EYE_FILE_FORMAT_ZEP;
+        //data_file_format                = EYE_FILE_FORMAT_EYELINK_ASC;
 
         // Where to store eye-movement data files.
         data_file_output_dir            = data_dir() + script_name() + "/dat/";
