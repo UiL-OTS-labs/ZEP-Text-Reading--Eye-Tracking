@@ -40,7 +40,7 @@ HISTORY:
 
 \******************************************************************************/
 
-//requires 1.10;
+requires 1.10;
 
 import defs;
 import stimuli;
@@ -346,9 +346,9 @@ Block task
         on_event:entry()
         {
             // Randomize test items table.
-            if (shuffle_test_items() != OK) terminate;
+            if (shuffle_test_items(selected_group) != OK) terminate;
 
-            num_cycles = test_items.size;
+            num_cycles = test_items[selected_group].size;
 //            num_cycles = 3;
 
             int listnum = selected_group + 1;
@@ -389,7 +389,7 @@ Block task
         {
             on_event:entry()
             {
-                item = test_items[test.cycle];
+                item = test_items[selected_group][test.cycle];
 
                 output.trialnum = test.cycle + 1;
                 output.id = item.id;

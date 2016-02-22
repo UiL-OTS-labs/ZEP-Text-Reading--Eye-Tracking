@@ -22,6 +22,8 @@ Global structure of experiment:
 
 HISTORY:
 2013-07-03 TV   Created.
+2013-07-03 MD   Major overhaul to generate stimuli much easier now there is
+                support for multiple lists.
 
 \******************************************************************************/
 
@@ -35,7 +37,7 @@ import std_pause_page;
 import std_blank_page;
 
 import test::task;
-
+import test::generate_objects;
 
 Experiment experiment
 {
@@ -55,6 +57,41 @@ Experiment experiment
         }
     }
 
+    // Decides whether to start te task or generate the
+    // objects and png
+    TransientPart decide_generate
+    {
+        on_event:entry() 
+        {
+            if (generate_object_info)
+                generate_objs.enter();
+            else
+                welcome.enter();
+        }
+    }
+
+    // if commandline option --generate is present all objects
+    // and png's are generated for all lists.
+    Part generate_objs
+    {
+        on_event:entry()
+        {
+            if (generate_object_info)
+            {
+                test::generate(this);
+            }
+        }
+
+        on_event:exit()
+        {
+            if (generate_object_info)
+            {
+                test::object_info_save();
+                control.mark_experiment_aborted();
+                terminate;
+            }
+        }
+    }
 
     Part welcome
     {

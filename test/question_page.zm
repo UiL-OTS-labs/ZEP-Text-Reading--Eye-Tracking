@@ -18,6 +18,7 @@ HISTORY:
 Page question_page
 {
     TestItem    item;           // trial control parameters
+    int         listindex;      // Used for genenrating objects.
 
 
     init()
@@ -45,7 +46,7 @@ Page question_page
         {
             if (message_arg == DRIFT_CHECK_DONE)
             {
-                if (item.qreceye) eyetracker.start_tracking();
+                if (item.qreceye && !generate_object_info) eyetracker.start_tracking();
 
                 // Start stimulus.
                 time stimonset = 
@@ -116,11 +117,14 @@ Page question_page
 
                 on_event:start()
                 {
-                    int dt = int(now() - start_time);
-                    eyetracker.print_to_data_file(start_time, 
-                        "SYNCTIME " + string(dt));
-                    eyetracker.print_to_data_file(start_time, 
-                        string(dt) + " DISPLAY ON");
+                    // while generating objecs we don't record any eyemovements.
+                    if (!generate_object_info) {
+                        int dt = int(now() - start_time);
+                        eyetracker.print_to_data_file(start_time, 
+                            "SYNCTIME " + string(dt));
+                        eyetracker.print_to_data_file(start_time, 
+                            string(dt) + " DISPLAY ON");
+                    }
 
                     if (generate_object_info && item.qreceye == true)
                     {
@@ -155,7 +159,7 @@ Page question_page
                                 output.linelength = sentencelength;
                                 output.wordlength = length(item_string(n, i));
                                 output.text = item_string(n, i);
-                                object_info_append(output);
+                                object_info_append(listindex, output);
                                 i++;
                                 j++;
                             }
@@ -243,28 +247,31 @@ Page question_page
     {
         on_event:expire()
         {
-            // Tell eye-tracker which target page to draw on and which
-            // object to signal when drift-check is done or aborted.
-            eyetracker.target_page = question_page;
-            eyetracker.target = question_page;
+            // only do this in a real test, not while generating objects.
+            if (!generate_object_info) {
+                // Tell eye-tracker which target page to draw on and which
+                // object to signal when drift-check is done or aborted.
+                eyetracker.target_page = question_page;
+                eyetracker.target = question_page;
 
-            int x = int(layout.canvas.x_abs + layout.canvas.offset_x +
-                layout.canvas.stimulus.string_width("n") / 2);
-            int y = int(layout.canvas.y_abs + layout.canvas.offset_y +
-                layout.canvas.stimulus.line_height / 2);
+                int x = int(layout.canvas.x_abs + layout.canvas.offset_x +
+                    layout.canvas.stimulus.string_width("n") / 2);
+                int y = int(layout.canvas.y_abs + layout.canvas.offset_y +
+                    layout.canvas.stimulus.line_height / 2);
 
-            eyetracker.start_drift_check(x, y);
+                eyetracker.start_drift_check(x, y);
+            }
         }
     }
 
 
     void start_drift_check(time t)
     {
-        if (item.qdriftchk && !generate_object_info)
+        if (item.qdriftchk)
             drift_check_timer.start(t);
         else
         {
-            if (item.qreceye) eyetracker.start_tracking();
+            if (item.qreceye && !generate_object_info) eyetracker.start_tracking();
 
             // Start stimulus.
             time stimonset = layout.start_stimulus(t);
@@ -324,7 +331,7 @@ Page question_page
 
         on_event:finish()
         {
-            if (item.qreceye) eyetracker.stop_tracking();
+            if (item.qreceye && !generate_object_info) eyetracker.stop_tracking();
             done(CONTINUE);
         }
     }
@@ -363,11 +370,20 @@ Page question_page
         control.button_box.enable_button(1, 1); // button 1 maps to 1
     }
 
+    void set_list_index(int i)
+    {
+        if (!generate_object_info)
+            println("There is no reason to call the set_list_index_function"
+                    "This reflects a bug in your program.");
+        listindex = i;
+    }
+
 
     // Performs cleaning up if necessary.
     void cleanup()
     {
         test_page_overlay.cleanup();
+        listindex = -1;
 
         control.button_box.disable_buttons();
         control.target = null;
