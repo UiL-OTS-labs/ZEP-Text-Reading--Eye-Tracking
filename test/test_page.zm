@@ -18,6 +18,8 @@ HISTORY:
 Page test_page
 {
     TestItem    item;           // trial control parameters
+    int         listindex;      // Is used while generating_object_info to
+                                // output to the right list.
 
 
     init()
@@ -43,7 +45,7 @@ Page test_page
         {
             if (message_arg == DRIFT_CHECK_DONE)
             {
-                if (item.receye) eyetracker.start_tracking();
+                if (item.receye && !generate_object_info) eyetracker.start_tracking();
 
                 // Start stimulus.
                 time stimonset = 
@@ -114,11 +116,13 @@ Page test_page
 
                 on_event:start()
                 {
-                    int dt = int(now() - start_time);
-                    eyetracker.print_to_data_file(start_time, 
-                        "SYNCTIME " + string(dt));
-                    eyetracker.print_to_data_file(start_time, 
-                        string(dt) + " DISPLAY ON");
+                    if (!generate_object_info) {
+                        int dt = int(now() - start_time);
+                        eyetracker.print_to_data_file(start_time, 
+                            "SYNCTIME " + string(dt));
+                        eyetracker.print_to_data_file(start_time, 
+                            string(dt) + " DISPLAY ON");
+                    }
 
                     if (generate_object_info && item.receye == true)
                     {
@@ -153,7 +157,7 @@ Page test_page
                                 output.linelength = sentencelength;
                                 output.wordlength = length(item_string(n, i));
                                 output.text = item_string(n, i);
-                                object_info_append(output);
+                                object_info_append(listindex, output);
                                 i++;
                                 j++;
                             }
@@ -191,17 +195,20 @@ Page test_page
     {
         on_event:expire()
         {
-            // Tell eye-tracker which target page to draw on and which
-            // object to signal when drift-check is done or aborted.
-            eyetracker.target_page = test_page;
-            eyetracker.target = test_page;
+            // don't touch the eyetracker while generating the objects.
+            if (!generate_object_info) {
+                // Tell eye-tracker which target page to draw on and which
+                // object to signal when drift-check is done or aborted.
+                eyetracker.target_page = test_page;
+                eyetracker.target = test_page;
 
-            int x = int(layout.canvas.x_abs + layout.canvas.offset_x +
-                layout.canvas.stimulus.string_width("n") / 2);
-            int y = int(layout.canvas.y_abs + layout.canvas.offset_y +
-                layout.canvas.stimulus.line_height / 2);
+                int x = int(layout.canvas.x_abs + layout.canvas.offset_x +
+                    layout.canvas.stimulus.string_width("n") / 2);
+                int y = int(layout.canvas.y_abs + layout.canvas.offset_y +
+                    layout.canvas.stimulus.line_height / 2);
 
-            eyetracker.start_drift_check(x, y);
+                eyetracker.start_drift_check(x, y);
+            }
         }
     }
 
@@ -212,7 +219,7 @@ Page test_page
             drift_check_timer.start(t);
         else
         {
-            if (item.receye) eyetracker.start_tracking();
+            if (item.receye && !generate_object_info) eyetracker.start_tracking();
 
             // Start stimulus.
             time stimonset = layout.start_stimulus(t);
@@ -263,7 +270,7 @@ Page test_page
 
         on_event:finish()
         {
-            if (item.receye) eyetracker.stop_tracking();
+            if (item.receye && !generate_object_info) eyetracker.stop_tracking();
             done(CONTINUE);
         }
     }
@@ -305,11 +312,22 @@ Page test_page
         control.button_box.enable_button(2, 0);
     }
 
+    // Sets the list index, this is used when generating objects.
+    void set_list_index(int i)
+    {
+        if (!generate_object_info)
+            println("There is no reason to call function set_list_index(int i)"
+            "this indicates a bug in the program.");
+
+        listindex = i;
+    }
+
 
     // Performs cleaning up if necessary.
     void cleanup()
     {
         test_page_overlay.cleanup();
+        listindex = -1;
 
         control.button_box.disable_buttons();
         control.target = null;

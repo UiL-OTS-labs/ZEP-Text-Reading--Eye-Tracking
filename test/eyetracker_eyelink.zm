@@ -37,7 +37,8 @@ EyeLinkEyeTracker eyetracker
         // The following attributes define appearance of calibration targets.
 
 //        wakeup_target_duration          = 1000ms;
-//        focus_target_duration           = 500ms;
+        attention_target_duration       = 500ms;
+        focus_target_duration           = 500ms;
 
 //        default_target_line_color       = color:black;
 //        default_target_color            = color:red;

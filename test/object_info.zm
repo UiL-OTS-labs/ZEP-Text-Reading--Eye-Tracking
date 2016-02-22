@@ -1,15 +1,15 @@
 /******************************************************************************\
 FILE:           object_info.zm
 AUTHOR:         Theo Veenker <theo.veenker@beexy.nl>
-ADAPTED BY:     -
+ADAPTED BY:     Maarten Duijndam
 
 DESCRIPTION:
 
 Defines the format of the object information output table.
 
-
 HISTORY:
 2013-01-10 TV   Created.
+2016-02-05 MD   Previously only 1 list was saved, now all list are saved.
 
 \******************************************************************************/
 
@@ -40,17 +40,20 @@ record ObjectInfo
 
 
 // Object information output table.
-ObjectInfo[..] object_info;
+ObjectInfo[..][..] object_info;
 
 
 //------------------------------------------------------------------------------
 
 
 // Appends one row of data to object information output table.
-void object_info_append(ObjectInfo data)
+void object_info_append(int listindex, ObjectInfo data)
 {
-    object_info.size = object_info.size + 1;
-    object_info[object_info.size-1] = data;
+    if (listindex >= object_info.size)
+        object_info.size = listindex + 1;
+
+    object_info[listindex].size = object_info[listindex].size + 1;
+    object_info[listindex][object_info[listindex].size-1] = data;
 }
 
 
@@ -61,9 +64,16 @@ void object_info_save()
     if (!generate_object_info) return;
 
     string dir = data_dir() + script_name() + "/obt/";
+    int listidx = 0;
 
-    // Save table to CSV file (create if non-existent).
-    object_info.save(dir + "objects.csv", 
-        "Object Information");
-    object_info.size = 0;
+    while (listidx < object_info.size) {
+        int listnum = listidx + 1;
+
+        // Save table to CSV file (create if non-existent).
+        object_info[listidx].save(dir + "objects" + string(listnum) + ".csv", 
+            "Object Information: list " + string(listnum));
+        object_info[listidx].size = 0;
+
+        listidx++;
+    }
 }
