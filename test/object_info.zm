@@ -42,10 +42,6 @@ record ObjectInfo
 // Object information output table.
 ObjectInfo[..][..] object_info;
 
-
-//------------------------------------------------------------------------------
-
-
 // Appends one row of data to object information output table.
 void object_info_append(int listindex, ObjectInfo data)
 {
@@ -77,3 +73,104 @@ void object_info_save()
         listidx++;
     }
 }
+
+//------------------------------------------------------------------------------
+
+/*
+ * Checks if the object is on the last line.
+ */
+bool object_is_on_last_line(ObjectInfo[] objects, ObjectInfo obt)
+{
+    int i = 0;
+    ObjectInfo[..] temp;
+
+    // store objects with identical id in temp
+    while (i < objects.size)
+    {
+        if (objects[i].completetype == obt.completetype)
+        {
+            temp.size = temp.size + 1;
+            temp[temp.size - 1] = objects[i];
+        }
+        i++;
+    }
+
+    int maxline = 0;
+    i = 0;
+    while (i < temp.size) {
+        if (temp[i].linenum > maxline)
+            maxline = temp[i].linenum;
+        i++;
+    }
+
+    return obt.linenum == maxline;
+}
+
+/*
+ * The text shapes format to fit nicely in a layout. This means in practise,
+ * that the first and last line do not have the same height as the lines in
+ * the middle. However, for a reading experiment the height should be equal
+ * for all lines, that is the height should be homogenous.
+ *
+ * this function tries to achieve that condition. This only works
+ * when there are more than two lines.
+ */
+void object_info_correct_height(int listindex, int spacing)
+{
+    ObjectInfo[] objects = object_info[listindex];
+    int height=0;
+    int i = 0;
+    /* Get the largest height and maximum linenumber. */
+    while (i < objects.size) 
+    {
+        if (objects[i].height > height)
+            height = objects[i].height;
+        i++;
+    }
+
+    /* Adjust bottom and top objects, in such way the height for
+     * all objects is identical.
+     */
+    i = 0;
+    while (i < objects.size)
+    {
+        // Adjust y and height for object in the first line
+        // effectively the object moves upwards, but adjust.
+
+        if (objects[i].height < height &&
+            objects[i].linenum == 0 &&
+            object_is_on_last_line(objects, objects[i])
+            )
+        {
+            int diff          = height - objects[i].height;
+            objects[i].y      = objects[i].y - diff / 2;
+            objects[i].height = objects[i].height + diff;
+        }
+        else if (objects[i].height < height && objects[i].linenum == 0)
+        {
+            int diff          = height - objects[i].height;
+            objects[i].y      = objects[i].y - diff;
+            objects[i].height = objects[i].height + diff;
+        }
+
+        // Only height has to be adjusted.
+        if (objects[i].height < height &&
+            object_is_on_last_line(objects, objects[i])
+            )
+        {
+            int diff          = height - objects[i].height;
+            objects[i].height = objects[i].height + diff;
+        }
+
+        // sanity check
+        if (objects[i].height != height)
+        {
+            println("objects[i].height = " + string(objects[i].height) +
+                    " while height = " + string(height) );
+            println("linenum = " + string(objects[i].linenum));
+        }
+        
+        i++;
+    }
+}
+
