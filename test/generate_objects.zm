@@ -42,6 +42,9 @@ Block generate_objects
 
             on_event:exit()
             {
+                // correct the object info for each list
+                object_info_correct_height(listnum-1, test_page.layout.canvas.stimulus.line_height);
+                
                 test_page.cleanup();
             }
 

@@ -100,7 +100,8 @@ Page question_page
 //                    font_size = TEST_PAGE_STIMULUS_FONT_SIZE;
 //                    font_size = FONT_SIZE_MEDIUM;
                     font_size = FONT_SIZE_SMALL;
-                    line_spacing = 8;       // pixels between lines
+                    //line_spacing = 8;       // pixels between lines
+                    line_spacing = line_height * 1;
                     letter_spacing = 0;     // 1/10 pixels between characters
                     line_pattern_color = TEST_PAGE_STIMULUS_TEXT_COLOR;
                     hor_alignment = ALIGN_BEGIN;

@@ -45,35 +45,7 @@ record TestItem
 
 // Practice item table.
 //   index: item number
-TestItem[..] prac_items =
-{
-    {
-        "001", PRAC, 
-
-        "In het tuincentrum konden Martine en Marije genoeg van hun gading\n"
-        "vinden. Martine zocht een zes appelbomen van een ziektebestendig\n"
-        "ras uit, en Marije twaalf bessenstruiken. Gelukkig was het prima\n"
-        "weer om hun nieuwe aanwinsten meteen te planten.",
-        true, false, 
-
-        "",
-        false, false, false
-    },
-
-    {
-        "002", PRAC, 
-
-        "Godelieve en Vincent waren net verhuisd en waren aan het klussen op\n"
-        "zolder. Godelieve zaagde een boekenplank van MDF, terwijl Vincent\n"
-        "de kozijnen verfde. Na een dag hard werken gingen ze tevreden slapen\n"
-        "in hun nieuwe huis.",
-        true, false, 
-
-        "Godelieve verfde de kozijnen.",
-        false, false, true
-    },
-};
-
+TestItem[..] prac_items;
 
 // Test item table.
 //   index 1: GRP1, GRP2
@@ -151,12 +123,11 @@ int load_stimuli(string dir)
 
     int err;
 
-//    // Load data into prac_items table.
-//    err = prac_items.load(dir + "prac_items.csv", 
-//        true,           // if true, file contains a header row
-//        1);             // number of lines to skip before header and data
-//    if (err) return err;
-
+    // Load data into prac_items table.
+    err = prac_items.load(dir + "prac_items.csv", 
+        true,           // if true, file contains a header row
+        1);             // number of lines to skip before header and data
+    if (err) return err;
 
     // Load data into test_items table.
     err = test_items.load(dir + "test_items.csv", 
@@ -168,16 +139,6 @@ int load_stimuli(string dir)
     err = zero_pad_item_number(test_items);
     if (err)
         return err;
-
-    int g = 0;
-    int i = 0;
-    while (g < test_items.size) {
-        while (i < test_items[g].size) {
-            //println("testitem = " + test_items[g][i].id);
-            i++;
-        }
-        g++;
-    }
 
     return OK;
 }
