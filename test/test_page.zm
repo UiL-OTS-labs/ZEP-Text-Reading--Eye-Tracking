@@ -310,7 +310,7 @@ Page test_page
         control.target = this;
         control.button_box.disable_buttons();
 //        control.button_box.enable_all_buttons(0);
-        control.button_box.enable_button(2, 0);
+        control.button_box.enable_button(1, 0);
     }
 
     // Sets the list index, this is used when generating objects.

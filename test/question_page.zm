@@ -368,7 +368,7 @@ Page question_page
         control.target = this;
         control.button_box.disable_buttons();
         control.button_box.enable_button(0, 0); // button 0 maps to 0
-        control.button_box.enable_button(1, 1); // button 1 maps to 1
+        control.button_box.enable_button(2, 1); // button 1 maps to 1
     }
 
     void set_list_index(int i)
