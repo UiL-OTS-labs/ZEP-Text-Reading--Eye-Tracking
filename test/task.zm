@@ -40,7 +40,6 @@ HISTORY:
 
 \******************************************************************************/
 
-requires 1.12;
 
 import defs;
 import stimuli;
@@ -50,6 +49,7 @@ import output;
 // out (//) the eyelink and remove the '//' from the line your eyetracker.
 import eyetracker_eyelink;
 //import eyetracker_smi;
+//import eyetracker_smi_infant;
 //import eyetracker_tobii;
 import etcal_page;
 import test_page;
