@@ -15,10 +15,11 @@ HISTORY:
 
 
 // Symbolic definition of groups.
+// Since each group corresponds to a list, we call them lists
 enum TestGroup
 {
-    GRP1,
-    GRP2,
+    LIST1,
+    LIST2
 }
 
 
