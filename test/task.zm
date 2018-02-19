@@ -59,6 +59,14 @@ import object_info;
 
 Block task
 {
+
+    on_event:entry()
+    {
+        // Randomize test items table.
+        if (shuffle_test_items(selected_group) != OK)
+            terminate;
+    }
+
     Part instructions
     {
         on_event:entry()
@@ -336,8 +344,6 @@ Block task
 
         on_event:entry()
         {
-            // Randomize test items table.
-            if (shuffle_test_items(selected_group) != OK) terminate;
 
             num_cycles = test_items[selected_group].size;
 //            num_cycles = 3;

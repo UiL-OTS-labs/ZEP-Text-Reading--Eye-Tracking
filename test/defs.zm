@@ -28,3 +28,6 @@ const dur       RECORDING_STOP_DELAY            = 100ms;
 
 // Chance of presenting a question/statement (0..100%).
 const int       STATEMENT_CHANCE                = 100;
+
+// Dump the test items to the terminal after shuffling.
+const bool      DUMP_TEST_ITEMS                 = false;
