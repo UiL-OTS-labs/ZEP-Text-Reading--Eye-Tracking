@@ -45,7 +45,7 @@ import defs;
 import stimuli;
 import shuffle;
 import output;
-// Defaultly the eyelink is selected. To select another eyetracker comment 
+// Defaultly the eyelink is selected. To select another eyetracker comment
 // out (//) the eyelink and remove the '//' from the line your eyetracker.
 import eyetracker_eyelink;
 //import eyetracker_smi;
@@ -59,15 +59,6 @@ import object_info;
 
 Block task
 {
-    on_event:entry()
-    {
-        control.button_box.open("/dev/ttyACM0");
-
-        // If necessary set parallel port line D0 to power button box device.
-//        
-    }
-
-
     Part instructions
     {
         on_event:entry()
@@ -98,8 +89,8 @@ Block task
                 "First we will calibrate the eye-tracker and then do a short "
                 "practice.\n"
                 "\n"
-//                "<i>Hit Enter when ready to start.</i>", 
-                "<i>Hit any button on the button-box when ready to start.</i>", 
+//                "<i>Hit Enter when ready to start.</i>",
+                "<i>Hit any button on the button-box when ready to start.</i>",
                 true);
 
             pause_page.action(this);
@@ -128,18 +119,18 @@ Block task
 
 //            int listnum = selected_group + 1;
 //            int recordingnum = 0;
-//            string edfname = 
-//                format(expdb.experiment.session.id, 4) + "_" + 
-//                format(listnum, 2) + "_" + 
+//            string edfname =
+//                format(expdb.experiment.session.id, 4) + "_" +
+//                format(listnum, 2) + "_" +
 //                format(recordingnum, 2);
 //
-//            // Let eye-tracker open a data file. 
+//            // Let eye-tracker open a data file.
 //            eyetracker.open_data_file(
-//                edfname, 
-//                expdb.experiment.id, 
-//                expdb.researcher.id, 
-//                expdb.participant.id, 
-//                expdb.experiment.session.id, 
+//                edfname,
+//                expdb.experiment.id,
+//                expdb.researcher.id,
+//                expdb.participant.id,
+//                expdb.experiment.session.id,
 //                listnum, recordingnum);
 //            eyetracker.print_to_data_file("Text Reading Experiment");
 
@@ -171,11 +162,11 @@ Block task
 //                    string(item.id) + " " +
 //                    string(item.type));
 //                eyetracker.print_to_data_file("plafile " +
-//                    string(item.type) + 
+//                    string(item.type) +
 //                    string(item.id) + ".bmp");
 
                 // Show information on eye-tracker screen.
-                eyetracker.set_tracker_status_message("Practice trial " + 
+                eyetracker.set_tracker_status_message("Practice trial " +
                     string(practice.cycle+1));
             }
 
@@ -236,12 +227,12 @@ Block task
             {
                 on_event:entry()
                 {
-                    // If the eye-tracker drift checking has failed or was 
-                    // aborted then do a recalibration, otherwise check if 
+                    // If the eye-tracker drift checking has failed or was
+                    // aborted then do a recalibration, otherwise check if
                     // we need to ask a comprehension question.
                     if (test_page.response.recalibrate)
                         recalibration1.enter(); // Enter recalibration subtrial.
-                    else if (random(100) >= STATEMENT_CHANCE || 
+                    else if (random(100) >= STATEMENT_CHANCE ||
                             length(item.qtext) == 0)
                         trial.next_cycle(); // Skip question subtrial.
                 }
@@ -272,7 +263,7 @@ Block task
                 {
                     question_page.setup(practice.num_cycles);
 
-                    question_page.action(this, item, reference_time, 
+                    question_page.action(this, item, reference_time,
                         practice.cycle);
                 }
 
@@ -288,7 +279,7 @@ Block task
             {
                 on_event:entry()
                 {
-                    // If the eye-tracker drift checking has failed or was 
+                    // If the eye-tracker drift checking has failed or was
                     // aborted then do a recalibration.
                     if (question_page.response.recalibrate)
                         recalibration2.enter(); // Enter recalibration subtrial.
@@ -317,9 +308,9 @@ Block task
                 "If you have any questions at this moment please ask the "
                 "experimenter now.\n"
                 "\n"
-//                "<i>Hit Enter when ready to proceed.</i>", 
+//                "<i>Hit Enter when ready to proceed.</i>",
                 "<i>Hit any button on the button-box when ready to "
-                "proceed.</i>", 
+                "proceed.</i>",
                 true);
 
             pause_page.action(this);
@@ -353,18 +344,18 @@ Block task
 
             int listnum = selected_group + 1;
             int recordingnum = 1;
-            string edfname = 
-                format(expdb.experiment.session.id, 4) + "_" + 
-                format(listnum, 2) + "_" + 
+            string edfname =
+                format(expdb.experiment.session.id, 4) + "_" +
+                format(listnum, 2) + "_" +
                 format(recordingnum, 2);
 
-            // Let eye-tracker open a data file. 
+            // Let eye-tracker open a data file.
             eyetracker.open_data_file(
-                edfname, 
-                expdb.experiment.id, 
-                expdb.researcher.id, 
-                expdb.participant.id, 
-                expdb.experiment.session.id, 
+                edfname,
+                expdb.experiment.id,
+                expdb.researcher.id,
+                expdb.participant.id,
+                expdb.experiment.session.id,
                 listnum, recordingnum);
             eyetracker.print_to_data_file("Text Reading Experiment");
 
@@ -411,11 +402,11 @@ Block task
                     string(item.id) + " " +
                     string(item.type));
                 eyetracker.print_to_data_file("plafile " +
-                    string(item.type) + 
+                    string(item.type) +
                     string(item.id) + ".bmp");
 
                 // Show information on eye-tracker screen.
-                eyetracker.set_tracker_status_message("Test trial " + 
+                eyetracker.set_tracker_status_message("Test trial " +
                     string(test.cycle+1));
             }
 
@@ -479,12 +470,12 @@ Block task
             {
                 on_event:entry()
                 {
-                    // If the eye-tracker drift checking has failed or was 
-                    // aborted then do a recalibration, otherwise check if 
+                    // If the eye-tracker drift checking has failed or was
+                    // aborted then do a recalibration, otherwise check if
                     // we need to ask a comprehension question.
                     if (test_page.response.recalibrate)
                         recalibration1.enter(); // Enter recalibration subtrial.
-                    else if (random(100) >= STATEMENT_CHANCE || 
+                    else if (random(100) >= STATEMENT_CHANCE ||
                             length(item.qtext) == 0)
                         trial.next_cycle(); // Skip question subtrial.
                 }
@@ -515,7 +506,7 @@ Block task
                 {
                     question_page.setup(test.num_cycles);
 
-                    question_page.action(this, item, reference_time, 
+                    question_page.action(this, item, reference_time,
                         test.cycle);
                 }
 
@@ -535,7 +526,7 @@ Block task
             {
                 on_event:entry()
                 {
-                    // If the eye-tracker drift checking has failed or was 
+                    // If the eye-tracker drift checking has failed or was
                     // aborted then do a recalibration.
                     if (question_page.response.recalibrate)
                         recalibration2.enter(); // Enter recalibration subtrial.
