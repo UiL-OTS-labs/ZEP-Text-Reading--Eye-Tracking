@@ -76,9 +76,18 @@ SmiEyeTracker eyetracker
         //   NONE:   no eye-movement data saved
         //   SYSTEM: eye-tracker defined format (preferred)
         //   ZEP:    zep defined format
+        //   ISPECTOR A format suitable for use wit iSpector
         //   BOTH:   both eye-tracker and zep defined format
-        data_file_format                = EYE_FILE_FORMAT_ZEP;
-        //data_file_format                = EYE_FILE_FORMAT_EYELINK_ASC;
+
+        //data_file_format                = EYE_FILE_FORMAT_ZEP;
+        data_file_format                = EYE_FILE_FORMAT_EYELINK_ASC;
+        //data_file_format                = EYE_FILE_FORMAT_ISPECTOR
+
+        // Allow iViewXAPI to display extra windows to see eyetracking
+        // performance
+        if (!simulated)
+            show_api_window             = SMI_SHOW_TRACKING|SMI_SHOW_ACCURACY;
+
 
         // Where to store eye-movement data files.
         data_file_output_dir            = data_dir() + script_name() + "/dat/";
