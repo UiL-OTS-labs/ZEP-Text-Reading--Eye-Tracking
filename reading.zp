@@ -27,7 +27,7 @@ HISTORY:
 
 \******************************************************************************/
 
-requires 1.14;
+requires 1.16;
 
 // use std_window1a for the smi eyetracker.
 import std_windows1;
