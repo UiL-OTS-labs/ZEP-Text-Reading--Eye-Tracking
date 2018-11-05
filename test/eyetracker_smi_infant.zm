@@ -1,15 +1,16 @@
 /******************************************************************************\
-FILE:           eyetracker_tobii.zm
+FILE:           eyetracker_smi.zm
 AUTHOR:         Theo Veenker <theo.veenker@beexy.nl>
-ADAPTED BY:     -
+ADAPTED BY:     Maarten Duijndam <m.j.a.duijndam@uu.nl>
 
 DESCRIPTION:
 
-Provides an interface to the Tobii eye-tracker.
+Provides an interface to the SMI eye-tracker.
 
 
 HISTORY:
 2012-09-21 TV   Created.
+2015-11-19 MD   Adapted to needs of an SMI eye_tracker.
 
 \******************************************************************************/
 
@@ -25,83 +26,94 @@ enum EyeTrkMessage
 }
 
 
-TobiiEyeTracker eyetracker
+SmiEyeTracker eyetracker
 {
     init()
     {
         // Optimal distance and range from eye to eye-tracker camera.
         // These values are only used in camera setup display.
-//        optimal_eye_to_camera_distance  = 600;          // mm
-//        eye_to_camera_range             = 500;          // mm
+//        optimal_eye_to_camera_distance  = 600;          // mm (guess)
+//        eye_to_camera_range             = 500;          // mm (guess)
 
         // The following attributes define appearance of calibration targets.
 
-//        attention_target_duration       = 1000ms;
-//        wakeup_target_duration          = 1000ms;
-//        focus_target_duration           = 500ms;
+        wakeup_target_duration          = 1000ms;
+        focus_target_duration           = 500ms;
 
 //        default_target_line_color       = color:black;
 //        default_target_color            = color:red;
 //        wakeup_target_color             = color:yellow;
 
-        test_image                      = zep_dir() + "data/images/hendrik.png";
+        attention_target_image          = zep_dir() + "data/images/teddy.svg";
+        focus_target_image              = zep_dir() + "data/images/teddy.svg";
+        wakeup_target_image             = zep_dir() + "data/images/sun.svg";
 
-//        min_target_size                 = 10;
-//        max_target_size                 = 100;
-//        setup_target_size               = 100;
-//        target_size_mod                 = 0.2;
+        cross_fade_focus_target         = false;
+
+        min_target_size                 = 10;
+        max_target_size                 = 100;
+        setup_target_size               = 100;
+        target_size_mod                 = 0.2;
 //        target_size_mod_freq            = 1;
 //        target_wiggle_mod               = 0.05;
 //        target_wiggle_mod_freq          = 4;
 
-//        simulated_gaze_noise            = 0.01;
+        simulated_gaze_noise            = 0.01;
     }
 
 
     on_event:connected()
     {
         // Calibration type.
-        calibration_type                = CALIB_TYPE_13;
-
-        // Calibration target distance from screen edge. Specify as normalized 
-        // screen coordinates.
-//        calibration_target_origin_x     = 0.08;
-//        calibration_target_origin_y     = 0.08;
-
-        // Calibration result analysis parameters. The quality of a single 
-        // calibration point can be bad (i.e. failed), poor, fair or good.
-        // To determine the quality of a calibration target we do this:
-        //   let N be the number of valid gaze samples collected by the 
-        //   eye-tracker for given target and let E be the average distance
-        //   (i.e. error) from the target,
-        //   then if N = 0 -> bad/failed
-        //   otherwise if N <= calibration_min_samples    -> poor
-        //   otherwise if E > calibration_max_error_fair  -> poor
-        //   otherwise if E > calibration_max_error_good  -> fair
-        //   otherwise -> good
-//        calibration_min_samples         = 2;
-//        calibration_max_error_fair      = 10.0/300.0;   // 10mm/300mm
-//        calibration_max_error_good      = 5.0/300.0;    // 5mm/300mm
+        calibration_type                = CALIB_TYPE_5A;
 
         // For infants you may want to trigger calibration targets manually.
 //        manual_calibration              = false;
 
-        // Dwell-time gaze analyzer settings. 
-        //   recommended settings for picture stimuli:       50px, 200ms
-        //   recommended settings for text stimuli:          20px, 40ms
-        //   recommended settings for mixed content stimuli: 30px, 100ms
-//        analyzer_max_fixation_radius    = 30;
-//        analyzer_min_fixation_duration  = 100ms;
-
+        // SMI settings:
+        // valid samplerates for SMI red250mobile are 60,120 and 250Hz.
+        // The next code searches the highest and lowest samplerates.
+        // It sets the simulator to the lowest possible
+        // and the real eyetracker to the highest possible samplerate.
+        int highest = 0;
+        int lowest = -1;
+        int i=0;
+        while (i < num_allowed_samplerates) {
+            int sr = get_allowed_samplerate(i);
+            if (sr > highest)
+                highest = sr;
+            if(lowest < 0 || sr < lowest)
+                lowest = sr;
+             i++;
+        }
+        
+        if (!simulated)
+            samplerate                  = highest;
+        else
+            samplerate                  = lowest;
+        
+        // Set to true to let iViewXAPI open a window of it own to run the 
+        // calibration and validation.
+        api_calibration                 = false;
+        // show_api_window is only implemented in the real eyetracker.
+        // iViewXAPI will open some windows to show:
+        // TRACKING     Whether the participants eyes are in the virtual
+        //              eyetracking box.
+        // ACCURACY     Shows visual clue whether validation and calibration
+        //              are alright.
+        if (!simulated)
+            show_api_window             = SMI_SHOW_TRACKING|SMI_SHOW_ACCURACY;
+        
         // Fixation update interval.
 //        fixation_update_interval        = 50ms;
 
         // Desired eye-movement data file format:
-        //   NONE:   no eye-movement data saved
-        //   SYSTEM: eye-tracker defined format (preferred)
-        //   ZEP:    zep defined format
-        //   BOTH:   both eye-tracker and zep defined format
-        data_file_format                = EYE_FILE_FORMAT_SYSTEM;
+        //   NONE:          no eye-movement data saved
+        //   ZEP:           zep defined format
+        //   EYELINK_ASC    format similar to eyelink ascii format
+//        data_file_format                = EYE_FILE_FORMAT_ZEP;
+//        data_file_format                = EYE_FILE_FORMAT_EYELINK_ASC;
+        data_file_format                = EYE_FILE_FORMAT_ISPECTOR;
 
         // Where to store eye-movement data files.
         data_file_output_dir            = data_dir() + script_name() + "/dat/";

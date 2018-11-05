@@ -54,7 +54,7 @@ Page test_page
                 // Response interval starts at stimulus onset. No timeout.
                 response.start(stimonset);
             }
-            else if (message_arg == RECALBIRATE)
+            else if (message_arg == RECALIBRATE)
             {
                 response.recalibrate = true;
                 done(CANCEL);

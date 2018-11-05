@@ -20,7 +20,7 @@ plugin zep_file;
 enum EyeTrkMessage
 {
     DRIFT_CHECK_DONE,
-    RECALBIRATE,
+    RECALIBRATE,
     RECORDING_DONE,
 }
 
@@ -96,13 +96,13 @@ EyeLinkEyeTracker eyetracker
 
     on_event:drift_check_fail()
     {
-        signal_target(RECALBIRATE);
+        signal_target(RECALIBRATE);
     }
 
 
     on_event:drift_check_abort()
     {
-        signal_target(RECALBIRATE);
+        signal_target(RECALIBRATE);
     }
 
 
