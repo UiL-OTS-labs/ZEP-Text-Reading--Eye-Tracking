@@ -40,7 +40,6 @@ HISTORY:
 
 \******************************************************************************/
 
-requires 1.12;
 
 import defs;
 import stimuli;
@@ -48,8 +47,8 @@ import shuffle;
 import output;
 // Defaultly the eyelink is selected. To select another eyetracker comment 
 // out (//) the eyelink and remove the '//' from the line your eyetracker.
-import eyetracker_eyelink;
-//import eyetracker_smi;
+//import eyetracker_eyelink;
+import eyetracker_smi;
 //import eyetracker_tobii;
 import etcal_page;
 import test_page;
@@ -144,7 +143,9 @@ Block task
 //            eyetracker.print_to_data_file("Text Reading Experiment");
 
             // Prepare test page: progress bar enabled.
-            test_page.setup(num_cycles);
+            //test_page.setup(num_cycles);
+            // Prepare test page: progress bar disabled.
+            test_page.setup(-1);
         }
 
 
@@ -219,7 +220,8 @@ Block task
             {
                 on_event:entry()
                 {
-                    test_page.setup(practice.num_cycles);
+                    //test_page.setup(practice.num_cycles);
+                    test_page.setup(-1);
 
                     test_page.action(this, item, reference_time, practice.cycle);
                 }
@@ -270,7 +272,8 @@ Block task
             {
                 on_event:entry()
                 {
-                    question_page.setup(practice.num_cycles);
+                    //question_page.setup(practice.num_cycles);
+                    question_page.setup(-1);
 
                     question_page.action(this, item, reference_time, 
                         practice.cycle);
@@ -369,6 +372,8 @@ Block task
             eyetracker.print_to_data_file("Text Reading Experiment");
 
             // Prepare test page: progress bar enabled.
+            //test_page.setup(num_cycles);
+            // Prepare test page: progres bar disabled.
             test_page.setup(num_cycles);
         }
 
@@ -462,7 +467,8 @@ Block task
             {
                 on_event:entry()
                 {
-                    test_page.setup(test.num_cycles);
+                    //test_page.setup(test.num_cycles);
+                    test_page.setup(-1);
 
                     test_page.action(this, item, reference_time, test.cycle);
                 }
@@ -513,7 +519,8 @@ Block task
             {
                 on_event:entry()
                 {
-                    question_page.setup(test.num_cycles);
+                    //question_page.setup(test.num_cycles);
+                    question_page.setup(-1);
 
                     question_page.action(this, item, reference_time, 
                         test.cycle);
