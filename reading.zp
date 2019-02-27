@@ -50,7 +50,7 @@ Experiment experiment
         // In the eyetracking lab.
         control.button_box.open();
 
-        // In the baby eyetracking lab one has to select the beeyxbox
+        // In the baby eyetracking lab one has to select the beexybox
         // by serial number, and then the following is more appropriate.
         //
         // Make sure the serial number is correct here B15007
